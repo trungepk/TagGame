@@ -58,6 +58,11 @@ void UFollowComponent::SetFollowTarget(AActor* TargetToSet)
 
 void UFollowComponent::StartFollow()
 {
-	OnFollow.Broadcast();
+	if (FollowedTarget)
+	{
+		float DistanceToTarget = FollowedTarget->GetDistanceTo(GetOwner());
+		
+		OnFollow.Broadcast(DistanceToTarget >= FollowDistance);
+	}
 }
 

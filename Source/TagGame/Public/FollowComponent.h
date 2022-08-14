@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "FollowComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFollowRequest);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFollowRequest, bool, IsFarAway);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TAGGAME_API UFollowComponent : public UActorComponent

@@ -31,7 +31,6 @@ void UFollowComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	Follow();
 }
 
 void UFollowComponent::Setup()
@@ -45,6 +44,8 @@ void UFollowComponent::Setup()
 		{
 			SetFollowTarget(lastMember);
 			MyMode->AddGangMember(GetOwner());
+
+			StartFollow();
 		}
 	}
 }
@@ -55,38 +56,8 @@ void UFollowComponent::SetFollowTarget(AActor* TargetToSet)
 
 }
 
-void UFollowComponent::Follow()
+void UFollowComponent::StartFollow()
 {
-	if (!FollowedTarget) { return; }
-
-	UE_LOG(LogTemp, Warning, TEXT("Follow in component"));
-
-	FVector TargetForwardVec = FollowedTarget->GetActorForwardVector();
-	FVector TargetLocation = FollowedTarget->GetActorLocation();
-	FVector MoveToOffet = TargetForwardVec * (-FollowDistance) + TargetLocation;
-
-	float distanceBetween = (TargetLocation - GetOwner()->GetActorLocation()).Length();
-
-	if (distanceBetween <= FollowDistance + 5)
-	{
-		SetIsMoving(false);
-		return;
-	}
-
-	SetIsMoving(true);
-	float Alpha = 0.5f;
-	MoveToOffet = FMath::Lerp(GetOwner()->GetActorLocation(), MoveToOffet, Alpha);
-	GetOwner()->SetActorLocation(MoveToOffet);
-	GetOwner()->SetActorRotation(FollowedTarget->GetActorRotation());
-}
-
-void UFollowComponent::SetIsMoving(bool bIsMoving)
-{
-	IsMoving = bIsMoving;
-}
-
-bool UFollowComponent::GetIsMoving()
-{
-	return IsMoving;
+	OnFollow.Broadcast();
 }
 

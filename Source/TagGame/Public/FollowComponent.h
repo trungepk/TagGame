@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "FollowComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFollowRequest);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TAGGAME_API UFollowComponent : public UActorComponent
@@ -26,22 +27,20 @@ public:
 
 	void Setup();
 
-	UPROPERTY(EditDefaultsOnly, Category = Follow)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Follow)
 		float FollowDistance = 100.f;
 
-	void SetIsMoving(bool bIsMoving);
+	UPROPERTY(BlueprintAssignable)
+		FOnFollowRequest OnFollow;
 
-	bool GetIsMoving();
+	UFUNCTION(BlueprintCallable)
+	void StartFollow();
+
+	UPROPERTY(BlueprintReadWrite, Category = Follow)
+		AActor* FollowedTarget = nullptr;
 
 private:
 	bool isFollowing = false;
 
 	void SetFollowTarget(AActor* TargetToSet);
-
-	void Follow();
-
-	UPROPERTY()
-		AActor* FollowedTarget = nullptr;
-
-	bool IsMoving = false;
 };

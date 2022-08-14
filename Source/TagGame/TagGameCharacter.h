@@ -24,14 +24,6 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-	//TODO Scratch this
-	void SetIsMoving();
-
-	bool GetIsMoving();
-
-	void SetGangMember(AActor* gangMember);
-
-	TArray<AActor*> GetGangMember();
 
 private:
 	/** Top down camera */
@@ -45,8 +37,5 @@ private:
 	UFUNCTION()
 		void HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-	bool IsMoving = false;
-
-	TArray<AActor*> GMembers;
 };
 

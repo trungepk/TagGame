@@ -52,7 +52,8 @@ void ATagGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ATagGameCharacter::HitMesh);
+	//GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ATagGameCharacter::HitMesh);
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATagGameCharacter::OverlapBeginMesh);
 	ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	MyMode->AddGangMember(this);
 	//SetGangMember(this);
@@ -71,5 +72,15 @@ void ATagGameCharacter::HitMesh(UPrimitiveComponent* HitComponent, AActor* Other
 	if (InteractableCharacter)
 	{
 		InteractableCharacter->HitPlayer(HitComponent->GetOwner());
+	}
+}
+
+void ATagGameCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AInteractableCharacter* InteractableCharacter = Cast<AInteractableCharacter>(OtherActor);
+	if (InteractableCharacter)
+	{
+		InteractableCharacter->HitPlayer(OverlappedComponent->GetOwner());
 	}
 }

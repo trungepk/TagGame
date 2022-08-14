@@ -9,6 +9,7 @@
 enum Anims { Idle, Run };
 
 class ATagGameCharacter;
+class UFollowComponent;
 
 /**
  * 
@@ -28,9 +29,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = Follow)
-		float FollowDistance = -100.f;
-
 	UPROPERTY(EditDefaultsOnly, Category = Anim)
 		UAnimSequence* RunAnim;
 
@@ -42,21 +40,11 @@ private:
 
 	void ChangeMesh(USkeletalMesh* SkeletalMesh);
 
-	void SetupFollow(AActor* TargetToFollow);
-
-	void SetFollowTarget(AActor* TargetToSet);
-
-	void Follow();
-
 	void PlayAnim();
 
 	USkeletalMesh* PlayerSkeletalMesh = nullptr;
 
-	bool isFollowing = false;
-
 	Anims curAnim = Anims::Idle;
 
-	AActor* FollowedTarget = nullptr;
-
-	ATagGameCharacter* player = nullptr;
+	UFollowComponent* FollowComponent = nullptr;
 };

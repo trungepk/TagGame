@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TagGameCharacter.h"
+#include "TagGameGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
@@ -11,6 +12,7 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 #include "InteractableAgent.h"
+#include "Kismet/GameplayStatics.h"
 
 ATagGameCharacter::ATagGameCharacter()
 {
@@ -51,7 +53,9 @@ void ATagGameCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ATagGameCharacter::HitMesh);
-	SetGangMember(this);
+	ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	MyMode->AddGangMember(this);
+	//SetGangMember(this);
 }
 
 void ATagGameCharacter::Tick(float DeltaSeconds)
@@ -59,7 +63,7 @@ void ATagGameCharacter::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 
 	SetIsMoving();
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *GMembers.Last()->GetActorLocation().ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *GMembers.Last()->GetActorLocation().ToString());
 }
 
 void ATagGameCharacter::HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

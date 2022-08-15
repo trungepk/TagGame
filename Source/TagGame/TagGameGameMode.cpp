@@ -24,3 +24,13 @@ ATagGameGameMode::ATagGameGameMode()
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
 }
+
+void ATagGameGameMode::AddGangMember(AActor* gangMember)
+{
+	GMembers.Add(gangMember);
+}
+
+TArray<AActor*> ATagGameGameMode::GetGangMember()
+{
+	return GMembers;
+}

@@ -13,6 +13,14 @@ class ATagGameGameMode : public AGameModeBase
 
 public:
 	ATagGameGameMode();
+
+	void AddGangMember(AActor* gangMember);
+
+	TArray<AActor*> GetGangMember();
+
+private:
+	UPROPERTY()
+		TArray<AActor*> GMembers;
 };
 
 

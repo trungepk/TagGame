@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TagGameCharacter.h"
+#include "TagGameGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
@@ -10,7 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
-#include "InteractableAgent.h"
+#include "InteractableCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 ATagGameCharacter::ATagGameCharacter()
 {
@@ -50,44 +52,35 @@ void ATagGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ATagGameCharacter::HitMesh);
-	SetGangMember(this);
+	//GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ATagGameCharacter::HitMesh);
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATagGameCharacter::OverlapBeginMesh);
+	ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	MyMode->AddGangMember(this);
+	//SetGangMember(this);
 }
 
 void ATagGameCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-	SetIsMoving();
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *GMembers.Last()->GetActorLocation().ToString());
 }
 
 void ATagGameCharacter::HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	AInteractableAgent* InteractableAgent = Cast<AInteractableAgent>(OtherActor);
-	if (InteractableAgent)
+	AInteractableCharacter* InteractableCharacter = Cast<AInteractableCharacter>(OtherActor);
+	if (InteractableCharacter)
 	{
-		InteractableAgent->HitPlayer(HitComponent->GetOwner());
+		InteractableCharacter->HitPlayer(HitComponent->GetOwner());
 	}
 }
 
-void ATagGameCharacter::SetIsMoving()
+void ATagGameCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	IsMoving = GetMovementComponent()->Velocity.Length() > 0;
-}
-
-bool ATagGameCharacter::GetIsMoving()
-{
-	return IsMoving;
-}
-
-void ATagGameCharacter::SetGangMember(AActor* gangMember)
-{
-	GMembers.Add(gangMember);
-}
-
-TArray<AActor*> ATagGameCharacter::GetGangMember()
-{
-	return GMembers;
+	AInteractableCharacter* InteractableCharacter = Cast<AInteractableCharacter>(OtherActor);
+	if (InteractableCharacter)
+	{
+		InteractableCharacter->HitPlayer(OverlappedComponent->GetOwner());
+	}
 }

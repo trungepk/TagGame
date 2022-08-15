@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
-#include "InteractableAgent.generated.h"
+#include "GameFramework/Character.h"
+#include "InteractableCharacter.generated.h"
 
 UCLASS()
-class TAGGAME_API AInteractableAgent : public APawn
+class TAGGAME_API AInteractableCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	AInteractableAgent();
+	// Sets default values for this character's properties
+	AInteractableCharacter();
 
 protected:
 	// Called when the game starts or when spawned

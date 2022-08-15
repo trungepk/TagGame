@@ -84,3 +84,9 @@ void ATagGameCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponen
 		InteractableCharacter->HitPlayer(OverlappedComponent->GetOwner());
 	}
 }
+
+int32 ATagGameCharacter::GetMembersCount() const
+{
+	ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	return MyMode->GetGangMember().Num();
+}

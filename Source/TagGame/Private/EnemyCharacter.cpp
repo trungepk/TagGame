@@ -3,3 +3,16 @@
 
 #include "EnemyCharacter.h"
 
+
+
+void AEnemyCharacter::HitPlayer(AActor* Player)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hit enemy character"));
+	//ChangeMesh(PlayerSkeletalMesh);
+
+	//////Follow player
+	//if (FollowComponent)
+	//{
+	//	FollowComponent->Setup();
+	//}
+}

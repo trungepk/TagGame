@@ -13,5 +13,7 @@ UCLASS()
 class TAGGAME_API AEnemyCharacter : public AInteractableCharacter
 {
 	GENERATED_BODY()
-	
+
+private:
+	void HitPlayer(AActor* Player) override;
 };

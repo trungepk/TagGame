@@ -41,6 +41,11 @@ void ANeutralCharacter::HitPlayer(AActor* Player)
 	}
 }
 
+void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
+{
+
+}
+
 void ANeutralCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
 {
 	if (!SkeletalMesh) { return; }

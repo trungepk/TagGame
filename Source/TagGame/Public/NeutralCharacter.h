@@ -7,6 +7,7 @@
 #include "NeutralCharacter.generated.h"
 
 class UFollowComponent;
+class AEnemyCharacter;
 
 /**
  * 
@@ -19,6 +20,8 @@ class TAGGAME_API ANeutralCharacter : public AInteractableCharacter
 public:
 	// Sets default values for this character's properties
 	ANeutralCharacter();
+
+	void HitEnemy(AEnemyCharacter* Enemy);
 
 protected:
 	virtual void BeginPlay() override;

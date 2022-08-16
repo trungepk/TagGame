@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InteractableCharacter.h"
+#include "Constants.h"
 #include "EnemyCharacter.generated.h"
 
 /**
@@ -17,7 +18,16 @@ class TAGGAME_API AEnemyCharacter : public AInteractableCharacter
 public:
 	void AddGangMember(AActor* gangMember);
 
-	TArray<AActor*> GetGangMember();
+	//Kick the last member out
+	void PopGangMember(FString memberName);
+
+	TArray<AActor*>* GetGangMember();
+
+	UFUNCTION(BlueprintPure, Category = UI)
+		int32 GetMembersCount() const;
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 	void HitPlayer(AActor* Player) override;

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Constants.h"
 #include "InteractableCharacter.generated.h"
 
 UCLASS()
@@ -19,7 +20,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
 	USkeletalMeshComponent* SkeletalMesh = nullptr;
+
+	LineLeader Leader = LineLeader::None;
 
 public:	
 	// Called every frame
@@ -29,4 +33,5 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void HitPlayer(AActor* Player);
+
 };

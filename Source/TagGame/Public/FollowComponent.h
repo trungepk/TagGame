@@ -25,7 +25,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Setup();
+	void Setup(AActor* targetToFollow, const std::function<void()>& addToLine);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Follow)
 		float FollowDistance = 100.f;

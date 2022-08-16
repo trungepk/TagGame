@@ -2,6 +2,7 @@
 
 
 #include "NeutralCharacter.h"
+#include "EnemyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "TagGame/TagGameGameMode.h"
 #include "Tasks/AITask_MoveTo.h"
@@ -31,26 +32,63 @@ void ANeutralCharacter::Tick(float DeltaTime)
 
 void ANeutralCharacter::HitPlayer(AActor* Player)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit neutral character"));
 	ChangeMesh(PlayerSkeletalMesh);
 
-	////Follow player
+	if (Leader == LineLeader::None)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("First change"));
+	}
+	else if (Leader == LineLeader::Enemy)
+	{
+		if (HitEnemyCharacter)
+		{
+			HitEnemyCharacter->GetGangMember()->Remove(this);
+		}
+	}
+
 	if (FollowComponent)
 	{
-		FollowComponent->Setup();
+		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		AActor* lastMember = MyMode->GetGangMember()->Last();
+		auto callback = [&]() {MyMode->AddGangMember(this); };
+		FollowComponent->Setup(lastMember, callback);
 	}
+
+	Leader = LineLeader::Player;
 }
 
 void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 {
+	if (!Enemy) { return; }
 
+	HitEnemyCharacter = Enemy;
+
+	ChangeMesh(EnemySkeletalMesh);
+
+	if (Leader == LineLeader::None)
+	{
+	}
+	else if (Leader == LineLeader::Player)
+	{
+		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		MyMode->GetGangMember()->Remove(this);
+	}
+
+	if (FollowComponent)
+	{
+		AActor* lastMember = Enemy->GetGangMember()->Last();
+		auto callback = [&]() {Enemy->AddGangMember(this); };
+		FollowComponent->Setup(lastMember, callback);
+	}
+
+	Leader = LineLeader::Enemy;
 }
 
 void ANeutralCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
 {
 	if (!SkeletalMesh) { return; }
 
-	if (PlayerSkeletalMesh)
+	if (MeshToChange)
 	{
 		SkeletalMesh->SetSkeletalMesh(MeshToChange);
 	}

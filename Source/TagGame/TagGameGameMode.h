@@ -16,12 +16,10 @@ public:
 
 	void AddGangMember(AActor* gangMember);
 
-	TArray<AActor*> GetGangMember();
+	TArray<AActor*>* GetGangMember();
 
 private:
 	UPROPERTY()
 		TArray<AActor*> GMembers;
 };
-
-
 

@@ -33,18 +33,19 @@ void UFollowComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-void UFollowComponent::Setup()
+//void UFollowComponent::Setup(AActor* targetToFollow, void(*addToLine)())
+void UFollowComponent::Setup(AActor* targetToFollow, const std::function<void()>& addToLine)
 {
 	if (!isFollowing)
 	{
 		isFollowing = true;
-		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-		AActor* lastMember = MyMode->GetGangMember().Last();
-		if (lastMember)
+		/*ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		AActor* targetToFollow = MyMode->GetGangMember().Last();*/
+		if (targetToFollow)
 		{
-			SetFollowTarget(lastMember);
-			MyMode->AddGangMember(GetOwner());
-
+			SetFollowTarget(targetToFollow);
+			/*MyMode->AddGangMember(GetOwner())*/;
+			addToLine();
 			StartFollow();
 		}
 	}

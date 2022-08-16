@@ -3,12 +3,22 @@
 
 #include "EnemyCharacter.h"
 #include "NeutralCharacter.h"
+#include "Components/CapsuleComponent.h"
 
 
+void AEnemyCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OverlapBeginMesh);
+	/*SkeletalMesh = FindComponentByClass<USkeletalMeshComponent>();
+	FollowComponent = FindComponentByClass<UFollowComponent>();*/
+	AddGangMember(this);
+}
 
 void AEnemyCharacter::HitPlayer(AActor* Player)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit enemy character"));
+	UE_LOG(LogTemp, Warning, TEXT("Player Hit enemy character"));
 	//ChangeMesh(PlayerSkeletalMesh);
 
 	//////Follow player
@@ -16,6 +26,7 @@ void AEnemyCharacter::HitPlayer(AActor* Player)
 	//{
 	//	FollowComponent->Setup();
 	//}
+	Leader = LineLeader::Player;
 }
 
 void AEnemyCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -33,7 +44,26 @@ void AEnemyCharacter::AddGangMember(AActor* gangMember)
 	GMembers.Add(gangMember);
 }
 
-TArray<AActor*> AEnemyCharacter::GetGangMember()
+TArray<AActor*>* AEnemyCharacter::GetGangMember()
 {
-	return GMembers;
+	return &GMembers;
+}
+
+void AEnemyCharacter::PopGangMember(FString memberName)
+{
+	int32 indexToRemove = -1;
+
+	for (int32 i = 0; i != GMembers.Num(); ++i)
+	{
+		if (GMembers[i]->GetFName().ToString() == memberName)
+		{
+			indexToRemove = i;
+		}
+	}
+	GMembers.RemoveAt(indexToRemove);
+}
+
+int32 AEnemyCharacter::GetMembersCount() const
+{
+	return GMembers.Num();
 }

@@ -36,22 +36,20 @@ void ANeutralCharacter::HitPlayer(AActor* Player)
 
 	if (Leader == LineLeader::None)
 	{
-		
+		UE_LOG(LogTemp, Warning, TEXT("First change"));
 	}
 	else if (Leader == LineLeader::Enemy)
 	{
 		if (HitEnemyCharacter)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%d (before)"), HitEnemyCharacter->GetGangMember().Num());
-			HitEnemyCharacter->GetGangMember().Remove(this);
-			UE_LOG(LogTemp, Warning, TEXT("%d (after)"), HitEnemyCharacter->GetGangMember().Num());
+			HitEnemyCharacter->GetGangMember()->Remove(this);
 		}
 	}
 
 	if (FollowComponent)
 	{
 		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-		AActor* lastMember = MyMode->GetGangMember().Last();
+		AActor* lastMember = MyMode->GetGangMember()->Last();
 		auto callback = [&]() {MyMode->AddGangMember(this); };
 		FollowComponent->Setup(lastMember, callback);
 	}
@@ -69,21 +67,20 @@ void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 
 	if (Leader == LineLeader::None)
 	{
-		
 	}
 	else if (Leader == LineLeader::Player)
 	{
 		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-		MyMode->GetGangMember().Remove(this);
+		MyMode->GetGangMember()->Remove(this);
 	}
 
 	if (FollowComponent)
 	{
-		AActor* lastMember = Enemy->GetGangMember().Last();
+		AActor* lastMember = Enemy->GetGangMember()->Last();
 		auto callback = [&]() {Enemy->AddGangMember(this); };
 		FollowComponent->Setup(lastMember, callback);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("%d"), HitEnemyCharacter->GetGangMember().Num());
+
 	Leader = LineLeader::Enemy;
 }
 

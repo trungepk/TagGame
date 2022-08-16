@@ -88,5 +88,5 @@ void ATagGameCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponen
 int32 ATagGameCharacter::GetMembersCount() const
 {
 	ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	return MyMode->GetGangMember().Num();
+	return MyMode->GetGangMember()->Num();
 }

@@ -19,9 +19,9 @@ public:
 	void AddGangMember(AActor* gangMember);
 
 	//Kick the last member out
-	void PopGangMember();
+	void PopGangMember(FString memberName);
 
-	TArray<AActor*> GetGangMember();
+	TArray<AActor*>* GetGangMember();
 
 	UFUNCTION(BlueprintPure, Category = UI)
 		int32 GetMembersCount() const;

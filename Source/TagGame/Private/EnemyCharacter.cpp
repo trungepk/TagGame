@@ -44,14 +44,23 @@ void AEnemyCharacter::AddGangMember(AActor* gangMember)
 	GMembers.Add(gangMember);
 }
 
-TArray<AActor*> AEnemyCharacter::GetGangMember()
+TArray<AActor*>* AEnemyCharacter::GetGangMember()
 {
-	return GMembers;
+	return &GMembers;
 }
 
-void AEnemyCharacter::PopGangMember()
+void AEnemyCharacter::PopGangMember(FString memberName)
 {
+	int32 indexToRemove = -1;
 
+	for (int32 i = 0; i != GMembers.Num(); ++i)
+	{
+		if (GMembers[i]->GetFName().ToString() == memberName)
+		{
+			indexToRemove = i;
+		}
+	}
+	GMembers.RemoveAt(indexToRemove);
 }
 
 int32 AEnemyCharacter::GetMembersCount() const

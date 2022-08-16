@@ -30,7 +30,7 @@ void ATagGameGameMode::AddGangMember(AActor* gangMember)
 	GMembers.Add(gangMember);
 }
 
-TArray<AActor*> ATagGameGameMode::GetGangMember()
+TArray<AActor*>* ATagGameGameMode::GetGangMember()
 {
-	return GMembers;
+	return &GMembers;
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Constants.h"
 #include "InteractableCharacter.h"
 #include "NeutralCharacter.generated.h"
 
@@ -31,9 +32,19 @@ protected:
 private:
 	void HitPlayer(AActor* Player) override;
 
+	UPROPERTY()
 	USkeletalMesh* PlayerSkeletalMesh = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	USkeletalMesh* EnemySkeletalMesh = nullptr;
 
 	UFollowComponent* FollowComponent = nullptr;
 
 	void ChangeMesh(USkeletalMesh* MeshToChange);
+
+	//LineLeader Leader = LineLeader::None;
+
+	UPROPERTY()
+		AEnemyCharacter* HitEnemyCharacter = nullptr;
+
 };

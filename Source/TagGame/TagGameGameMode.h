@@ -23,5 +23,3 @@ private:
 		TArray<AActor*> GMembers;
 };
 
-
-

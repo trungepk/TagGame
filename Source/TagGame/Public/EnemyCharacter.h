@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "EnemyCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHitPlayer);
 /**
  * 
  */
@@ -26,6 +27,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = UI)
 		int32 GetMembersCount() const;
 
+	UPROPERTY(BlueprintAssignable)
+		FOnHitPlayer OnCaptured;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -38,4 +42,6 @@ private:
 
 	UPROPERTY()
 		TArray<AActor*> GMembers;
+
+	void ChangeMesh(USkeletalMesh* MeshToChange) override;
 };

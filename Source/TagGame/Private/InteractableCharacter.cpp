@@ -2,6 +2,7 @@
 
 
 #include "InteractableCharacter.h"
+#include "FollowComponent.h"
 
 // Sets default values
 AInteractableCharacter::AInteractableCharacter()
@@ -16,6 +17,8 @@ void AInteractableCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SkeletalMesh = FindComponentByClass<USkeletalMeshComponent>();
+	FollowComponent = FindComponentByClass<UFollowComponent>();
 }
 
 // Called every frame
@@ -36,3 +39,12 @@ void AInteractableCharacter::HitPlayer(AActor* Player)
 {
 }
 
+void AInteractableCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
+{
+	if (!SkeletalMesh) { return; }
+
+	if (MeshToChange)
+	{
+		SkeletalMesh->SetSkeletalMesh(MeshToChange);
+	}
+}

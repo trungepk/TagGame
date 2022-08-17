@@ -4,6 +4,10 @@
 #include "EnemyCharacter.h"
 #include "NeutralCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "TagGame/TagGameGameMode.h"
+#include "FollowComponent.h"
+#include "EnemyAIController.h"
 
 
 void AEnemyCharacter::BeginPlay()
@@ -11,22 +15,40 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OverlapBeginMesh);
-	/*SkeletalMesh = FindComponentByClass<USkeletalMeshComponent>();
-	FollowComponent = FindComponentByClass<UFollowComponent>();*/
+	
 	AddGangMember(this);
 }
 
 void AEnemyCharacter::HitPlayer(AActor* Player)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Player Hit enemy character"));
-	//ChangeMesh(PlayerSkeletalMesh);
 
-	//////Follow player
-	//if (FollowComponent)
-	//{
-	//	FollowComponent->Setup();
-	//}
-	Leader = LineLeader::Player;
+	//Compare total members to player's, if less or equal then get turn to player's member along with all its member, else lose game
+	if (Leader != LineLeader::Player)
+	{
+		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+		if (GetMembersCount() <= MyMode->GetGangMember()->Num())
+		{
+			//GetController()->UnPossess();
+			OnCaptured.Broadcast();
+
+			ChangeMesh(PlayerSkeletalMesh);
+
+			//////Follow player
+			if (FollowComponent)
+			{
+				auto callback = [&]() {MyMode->AddGangMember(this); };
+				FollowComponent->Setup(Player, callback);
+			}
+		}
+		else
+		{
+			//Lose game
+		}
+
+		Leader = LineLeader::Player;
+	}
 }
 
 void AEnemyCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -66,4 +88,9 @@ void AEnemyCharacter::PopGangMember(FString memberName)
 int32 AEnemyCharacter::GetMembersCount() const
 {
 	return GMembers.Num();
+}
+
+void AEnemyCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
+{
+	Super::ChangeMesh(MeshToChange);
 }

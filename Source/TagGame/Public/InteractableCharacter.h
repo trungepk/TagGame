@@ -7,6 +7,8 @@
 #include "Constants.h"
 #include "InteractableCharacter.generated.h"
 
+class UFollowComponent;
+
 UCLASS()
 class TAGGAME_API AInteractableCharacter : public ACharacter
 {
@@ -23,7 +25,18 @@ protected:
 	UPROPERTY()
 	USkeletalMeshComponent* SkeletalMesh = nullptr;
 
+	UPROPERTY()
+	UFollowComponent* FollowComponent = nullptr;
+
 	LineLeader Leader = LineLeader::None;
+
+	UPROPERTY(EditDefaultsOnly)
+		USkeletalMesh* PlayerSkeletalMesh = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+		USkeletalMesh* EnemySkeletalMesh = nullptr;
+
+	virtual void ChangeMesh(USkeletalMesh* MeshToChange);
 
 public:	
 	// Called every frame
@@ -33,5 +46,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void HitPlayer(AActor* Player);
+
 
 };

@@ -61,7 +61,6 @@ void UFollowComponent::StartFollow()
 {
 	if (FollowedTarget)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Start Follow"));
 		float DistanceToTarget = FollowedTarget->GetDistanceTo(GetOwner());
 		
 		OnFollow.Broadcast(DistanceToTarget >= FollowDistance);

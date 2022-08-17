@@ -7,7 +7,7 @@
 #include "Constants.h"
 #include "EnemyCharacter.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHitPlayer);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyCharacterDelegate);
 /**
  * 
  */
@@ -20,7 +20,7 @@ public:
 	void AddGangMember(AActor* gangMember);
 
 	//Kick the last member out
-	void PopGangMember(FString memberName);
+	void PopGangMember();
 
 	TArray<AActor*>* GetGangMember();
 
@@ -28,7 +28,9 @@ public:
 		int32 GetMembersCount() const;
 
 	UPROPERTY(BlueprintAssignable)
-		FOnHitPlayer OnCaptured;
+		FEnemyCharacterDelegate OnCaptured;
+
+	LineLeader GetLeaderType() const;
 
 protected:
 	virtual void BeginPlay() override;

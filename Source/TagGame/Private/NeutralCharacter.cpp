@@ -65,6 +65,12 @@ void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 {
 	if (!Enemy) { return; }
 
+	//Abort if hit enemy is a member of player
+	if (Enemy->GetLeaderType() == LineLeader::Player)
+	{
+		return;
+	}
+
 	HitEnemyCharacter = Enemy;
 
 	ChangeMesh(EnemySkeletalMesh);

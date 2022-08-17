@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TagGame/TagGameGameMode.h"
+#include "TagGame/TagGameCharacter.h"
 #include "FollowComponent.h"
 #include "EnemyAIController.h"
 
@@ -15,14 +16,12 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OverlapBeginMesh);
-	
+
 	AddGangMember(this);
 }
 
 void AEnemyCharacter::HitPlayer(AActor* Player)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Player Hit enemy character"));
-
 	//Compare total members to player's, if less or equal then get turn to player's member along with all its member, else lose game
 	if (Leader != LineLeader::Player)
 	{
@@ -30,12 +29,12 @@ void AEnemyCharacter::HitPlayer(AActor* Player)
 
 		if (GetMembersCount() <= MyMode->GetGangMember()->Num())
 		{
-			//GetController()->UnPossess();
+			//Stop AI behaviour and destroy UI widget
 			OnCaptured.Broadcast();
 
 			ChangeMesh(PlayerSkeletalMesh);
 
-			//////Follow player
+			//Follow player
 			if (FollowComponent)
 			{
 				auto callback = [&]() {MyMode->AddGangMember(this); };
@@ -45,6 +44,12 @@ void AEnemyCharacter::HitPlayer(AActor* Player)
 		else
 		{
 			//Lose game
+			auto PlayerCharacter = Cast<ATagGameCharacter>(Player);
+			
+			if (ensure(PlayerCharacter))
+			{
+				PlayerCharacter->KillPlayer();
+			}
 		}
 
 		Leader = LineLeader::Player;
@@ -71,18 +76,9 @@ TArray<AActor*>* AEnemyCharacter::GetGangMember()
 	return &GMembers;
 }
 
-void AEnemyCharacter::PopGangMember(FString memberName)
+void AEnemyCharacter::PopGangMember()
 {
-	int32 indexToRemove = -1;
 
-	for (int32 i = 0; i != GMembers.Num(); ++i)
-	{
-		if (GMembers[i]->GetFName().ToString() == memberName)
-		{
-			indexToRemove = i;
-		}
-	}
-	GMembers.RemoveAt(indexToRemove);
 }
 
 int32 AEnemyCharacter::GetMembersCount() const
@@ -93,4 +89,9 @@ int32 AEnemyCharacter::GetMembersCount() const
 void AEnemyCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
 {
 	Super::ChangeMesh(MeshToChange);
+}
+
+LineLeader AEnemyCharacter::GetLeaderType() const
+{
+	return Leader;
 }

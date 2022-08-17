@@ -90,3 +90,8 @@ int32 ATagGameCharacter::GetMembersCount() const
 	ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	return MyMode->GetGangMember()->Num();
 }
+
+void ATagGameCharacter::KillPlayer()
+{
+	OnDead.Broadcast();
+}

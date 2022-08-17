@@ -5,7 +5,6 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
-#include "TagGameCharacter.h"
 #include "Engine/World.h"
 
 ATagGamePlayerController::ATagGamePlayerController()
@@ -14,18 +13,24 @@ ATagGamePlayerController::ATagGamePlayerController()
 	DefaultMouseCursor = EMouseCursor::Default;
 }
 
+void ATagGamePlayerController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+
+}
+
 void ATagGamePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	if(bInputPressed)
+	if (bInputPressed)
 	{
 		FollowTime += DeltaTime;
 
 		// Look for the touch location
 		FVector HitLocation = FVector::ZeroVector;
 		FHitResult Hit;
-		if(bIsTouch)
+		if (bIsTouch)
 		{
 			GetHitResultUnderFinger(ETouchIndex::Touch1, ECC_Visibility, true, Hit);
 		}
@@ -37,7 +42,7 @@ void ATagGamePlayerController::PlayerTick(float DeltaTime)
 
 		// Direct the Pawn towards that location
 		APawn* const MyPawn = GetPawn();
-		if(MyPawn)
+		if (MyPawn)
 		{
 			FVector WorldDirection = (HitLocation - MyPawn->GetActorLocation()).GetSafeNormal();
 			MyPawn->AddMovementInput(WorldDirection, 1.f, false);
@@ -77,7 +82,7 @@ void ATagGamePlayerController::OnSetDestinationReleased()
 	bInputPressed = false;
 
 	// If it was a short press
-	if(FollowTime <= ShortPressThreshold)
+	if (FollowTime <= ShortPressThreshold)
 	{
 		// We look for the location in the world where the player has pressed the input
 		FVector HitLocation = FVector::ZeroVector;
@@ -102,3 +107,4 @@ void ATagGamePlayerController::OnTouchReleased(const ETouchIndex::Type FingerInd
 	bIsTouch = false;
 	OnSetDestinationReleased();
 }
+

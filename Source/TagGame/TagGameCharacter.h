@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "TagGameCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDelegate);
+
 UCLASS(Blueprintable)
 class ATagGameCharacter : public ACharacter
 {
@@ -26,14 +28,21 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = UI)
 		int32 GetMembersCount() const;
+
+	UFUNCTION()
+		void KillPlayer();
+
+	UPROPERTY(BlueprintAssignable)
+		FPlayerDelegate OnDead;
+
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* TopDownCameraComponent;
+		class UCameraComponent* TopDownCameraComponent;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+		class USpringArmComponent* CameraBoom;
 
 	UFUNCTION()
 		void HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

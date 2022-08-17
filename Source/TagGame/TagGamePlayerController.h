@@ -41,6 +41,10 @@ protected:
 	void OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location);
 
+	virtual void SetPawn(APawn* InPawn) override;
+
+	void OnPlayerDead();
+
 private:
 	bool bInputPressed; // Input is bring pressed
 	bool bIsTouch; // Is it a touch device

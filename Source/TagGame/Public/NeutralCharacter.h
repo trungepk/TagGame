@@ -32,19 +32,8 @@ protected:
 private:
 	void HitPlayer(AActor* Player) override;
 
-	UPROPERTY()
-	USkeletalMesh* PlayerSkeletalMesh = nullptr;
-
-	UPROPERTY(EditDefaultsOnly)
-	USkeletalMesh* EnemySkeletalMesh = nullptr;
-
-	UFollowComponent* FollowComponent = nullptr;
-
-	void ChangeMesh(USkeletalMesh* MeshToChange);
-
-	//LineLeader Leader = LineLeader::None;
+	void ChangeMesh(USkeletalMesh* MeshToChange) override;
 
 	UPROPERTY()
 		AEnemyCharacter* HitEnemyCharacter = nullptr;
-
 };

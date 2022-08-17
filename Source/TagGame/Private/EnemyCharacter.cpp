@@ -4,6 +4,11 @@
 #include "EnemyCharacter.h"
 #include "NeutralCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "TagGame/TagGameGameMode.h"
+#include "TagGame/TagGameCharacter.h"
+#include "FollowComponent.h"
+#include "EnemyAIController.h"
 
 
 void AEnemyCharacter::BeginPlay()
@@ -11,22 +16,54 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OverlapBeginMesh);
-	/*SkeletalMesh = FindComponentByClass<USkeletalMeshComponent>();
-	FollowComponent = FindComponentByClass<UFollowComponent>();*/
+
 	AddGangMember(this);
 }
 
 void AEnemyCharacter::HitPlayer(AActor* Player)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Player Hit enemy character"));
-	//ChangeMesh(PlayerSkeletalMesh);
+	//Compare total members to player's, if less or equal then get turn to player's member along with all its member, else lose game
+	if (Leader != LineLeader::Player)
+	{
+		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
-	//////Follow player
-	//if (FollowComponent)
-	//{
-	//	FollowComponent->Setup();
-	//}
-	Leader = LineLeader::Player;
+		if (GetMembersCount() <= MyMode->GetGangMember()->Num())
+		{
+			//Stop AI behaviour and destroy UI widget
+			OnCaptured.Broadcast();
+
+			ChangeMesh(PlayerSkeletalMesh);
+
+			//Follow player
+			if (FollowComponent)
+			{
+				auto callback = [&]() {MyMode->AddGangMember(this); };
+				FollowComponent->Setup(Player, callback);
+			}
+
+			//TODO Turn all member to player's side
+			if (GMembers.Num() > 1)
+			{
+				for (int32 i = 1; i < GMembers.Num(); i++)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *GMembers[i]->GetName());
+				}
+			}
+			
+		}
+		else
+		{
+			//Lose game
+			auto PlayerCharacter = Cast<ATagGameCharacter>(Player);
+			
+			if (ensure(PlayerCharacter))
+			{
+				PlayerCharacter->KillPlayer();
+			}
+		}
+
+		Leader = LineLeader::Player;
+	}
 }
 
 void AEnemyCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -49,21 +86,22 @@ TArray<AActor*>* AEnemyCharacter::GetGangMember()
 	return &GMembers;
 }
 
-void AEnemyCharacter::PopGangMember(FString memberName)
+void AEnemyCharacter::PopGangMember()
 {
-	int32 indexToRemove = -1;
 
-	for (int32 i = 0; i != GMembers.Num(); ++i)
-	{
-		if (GMembers[i]->GetFName().ToString() == memberName)
-		{
-			indexToRemove = i;
-		}
-	}
-	GMembers.RemoveAt(indexToRemove);
 }
 
 int32 AEnemyCharacter::GetMembersCount() const
 {
 	return GMembers.Num();
+}
+
+void AEnemyCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
+{
+	Super::ChangeMesh(MeshToChange);
+}
+
+LineLeader AEnemyCharacter::GetLeaderType() const
+{
+	return Leader;
 }

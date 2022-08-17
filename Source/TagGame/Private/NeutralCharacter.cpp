@@ -5,7 +5,6 @@
 #include "EnemyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "TagGame/TagGameGameMode.h"
-#include "Tasks/AITask_MoveTo.h"
 #include "FollowComponent.h"
 
 ANeutralCharacter::ANeutralCharacter()
@@ -21,8 +20,6 @@ void ANeutralCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SkeletalMesh = FindComponentByClass<USkeletalMeshComponent>();
-	FollowComponent = FindComponentByClass<UFollowComponent>();
 }
 
 void ANeutralCharacter::Tick(float DeltaTime)
@@ -34,24 +31,31 @@ void ANeutralCharacter::HitPlayer(AActor* Player)
 {
 	ChangeMesh(PlayerSkeletalMesh);
 
+	bool bSwitchTeam = false;
+
 	if (Leader == LineLeader::None)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("First change"));
+		bSwitchTeam = true;
 	}
 	else if (Leader == LineLeader::Enemy)
 	{
 		if (HitEnemyCharacter)
 		{
 			HitEnemyCharacter->GetGangMember()->Remove(this);
+			bSwitchTeam = true;
 		}
 	}
 
-	if (FollowComponent)
+	if (bSwitchTeam)
 	{
-		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-		AActor* lastMember = MyMode->GetGangMember()->Last();
-		auto callback = [&]() {MyMode->AddGangMember(this); };
-		FollowComponent->Setup(lastMember, callback);
+		if (FollowComponent)
+		{
+			ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+			AActor* lastMember = MyMode->GetGangMember()->Last();
+			auto callback = [&]() {MyMode->AddGangMember(this); };
+			FollowComponent->Setup(lastMember, callback);
+		}
 	}
 
 	Leader = LineLeader::Player;
@@ -61,24 +65,37 @@ void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 {
 	if (!Enemy) { return; }
 
+	//Abort if hit enemy is a member of player
+	if (Enemy->GetLeaderType() == LineLeader::Player)
+	{
+		return;
+	}
+
 	HitEnemyCharacter = Enemy;
 
 	ChangeMesh(EnemySkeletalMesh);
 
+	bool bSwitchTeam = false;
+
 	if (Leader == LineLeader::None)
 	{
+		bSwitchTeam = true;
 	}
 	else if (Leader == LineLeader::Player)
 	{
 		ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 		MyMode->GetGangMember()->Remove(this);
+		bSwitchTeam = true;
 	}
 
-	if (FollowComponent)
+	if (bSwitchTeam)
 	{
-		AActor* lastMember = Enemy->GetGangMember()->Last();
-		auto callback = [&]() {Enemy->AddGangMember(this); };
-		FollowComponent->Setup(lastMember, callback);
+		if (FollowComponent)
+		{
+			AActor* lastMember = Enemy->GetGangMember()->Last();
+			auto callback = [&]() {Enemy->AddGangMember(this); };
+			FollowComponent->Setup(lastMember, callback);
+		}
 	}
 
 	Leader = LineLeader::Enemy;
@@ -86,10 +103,5 @@ void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 
 void ANeutralCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
 {
-	if (!SkeletalMesh) { return; }
-
-	if (MeshToChange)
-	{
-		SkeletalMesh->SetSkeletalMesh(MeshToChange);
-	}
+	Super::ChangeMesh(MeshToChange);
 }

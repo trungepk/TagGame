@@ -40,6 +40,16 @@ void AEnemyCharacter::HitPlayer(AActor* Player)
 				auto callback = [&]() {MyMode->AddGangMember(this); };
 				FollowComponent->Setup(Player, callback);
 			}
+
+			//TODO Turn all member to player's side
+			if (GMembers.Num() > 1)
+			{
+				for (int32 i = 1; i < GMembers.Num(); i++)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *GMembers[i]->GetName());
+				}
+			}
+			
 		}
 		else
 		{

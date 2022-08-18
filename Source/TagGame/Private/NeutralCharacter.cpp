@@ -35,7 +35,6 @@ void ANeutralCharacter::HitPlayer(AActor* Player)
 
 	if (Leader == LineLeader::None)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("First change"));
 		bSwitchTeam = true;
 	}
 	else if (Leader == LineLeader::Enemy)
@@ -88,6 +87,8 @@ void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 		bSwitchTeam = true;
 	}
 
+	Leader = LineLeader::Enemy;
+
 	if (bSwitchTeam)
 	{
 		if (FollowComponent)
@@ -97,8 +98,6 @@ void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 			FollowComponent->Setup(lastMember, callback);
 		}
 	}
-
-	Leader = LineLeader::Enemy;
 }
 
 void ANeutralCharacter::ChangeMesh(USkeletalMesh* MeshToChange)

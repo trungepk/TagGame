@@ -22,7 +22,6 @@ void UFollowComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 
@@ -33,28 +32,19 @@ void UFollowComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-//void UFollowComponent::Setup(AActor* targetToFollow, void(*addToLine)())
 void UFollowComponent::Setup(AActor* targetToFollow, const std::function<void()>& addToLine)
 {
-	/*if (!isFollowing)
-	{*/
-		isFollowing = true;
-		/*ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-		AActor* targetToFollow = MyMode->GetGangMember().Last();*/
-		if (targetToFollow)
-		{
-			SetFollowTarget(targetToFollow);
-			/*MyMode->AddGangMember(GetOwner())*/;
-			addToLine();
-			StartFollow();
-		}
-	//}
+	if (targetToFollow)
+	{
+		SetFollowTarget(targetToFollow);
+		addToLine();
+		StartFollow();
+	}
 }
 
 void UFollowComponent::SetFollowTarget(AActor* TargetToSet)
 {
 	FollowedTarget = TargetToSet;
-
 }
 
 void UFollowComponent::StartFollow()
@@ -62,7 +52,8 @@ void UFollowComponent::StartFollow()
 	if (FollowedTarget)
 	{
 		float DistanceToTarget = FollowedTarget->GetDistanceTo(GetOwner());
-		
+
+		//Move to target if far enough 
 		OnFollow.Broadcast(DistanceToTarget >= FollowDistance);
 	}
 }

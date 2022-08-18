@@ -23,22 +23,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY()
-	USkeletalMeshComponent* SkeletalMesh = nullptr;
-
-	UPROPERTY()
-	UFollowComponent* FollowComponent = nullptr;
-
-	LineLeader Leader = LineLeader::None;
-
-	UPROPERTY(EditDefaultsOnly)
-		USkeletalMesh* PlayerSkeletalMesh = nullptr;
+		USkeletalMeshComponent* SkeletalMesh = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 		USkeletalMesh* EnemySkeletalMesh = nullptr;
 
-	virtual void ChangeMesh(USkeletalMesh* MeshToChange);
-
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -47,5 +37,16 @@ public:
 
 	virtual void HitPlayer(AActor* Player);
 
+	virtual void ChangeMesh(USkeletalMesh* MeshToChange);
 
+	UPROPERTY(EditDefaultsOnly)
+		USkeletalMesh* PlayerSkeletalMesh = nullptr;
+
+	UPROPERTY()
+		UFollowComponent* FollowComponent = nullptr;
+
+	LineLeader Leader = LineLeader::None;
+
+	UFUNCTION(BlueprintPure, Category = Line)
+		virtual LineLeader GetLeaderType() const;
 };

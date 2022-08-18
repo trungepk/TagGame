@@ -18,6 +18,12 @@ public:
 
 	TArray<AActor*>* GetGangMember();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		USkeletalMesh* PlayerSkeletalMesh = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		USkeletalMesh* EnemySkeletalMesh = nullptr;
+
 private:
 	UPROPERTY()
 		TArray<AActor*> GMembers;

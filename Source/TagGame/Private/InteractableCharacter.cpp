@@ -48,3 +48,8 @@ void AInteractableCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
 		SkeletalMesh->SetSkeletalMesh(MeshToChange);
 	}
 }
+
+LineLeader AInteractableCharacter::GetLeaderType() const
+{
+	return Leader;
+}

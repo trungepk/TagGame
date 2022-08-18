@@ -30,7 +30,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FEnemyCharacterDelegate OnCaptured;
 
-	LineLeader GetLeaderType() const;
+	//LineLeader GetLeaderType() const override;
 
 protected:
 	virtual void BeginPlay() override;

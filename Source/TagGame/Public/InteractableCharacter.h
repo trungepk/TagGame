@@ -23,12 +23,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY()
-	USkeletalMeshComponent* SkeletalMesh = nullptr;
+		USkeletalMeshComponent* SkeletalMesh = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 		USkeletalMesh* EnemySkeletalMesh = nullptr;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -46,4 +46,7 @@ public:
 		UFollowComponent* FollowComponent = nullptr;
 
 	LineLeader Leader = LineLeader::None;
+
+	UFUNCTION(BlueprintPure, Category = Line)
+		virtual LineLeader GetLeaderType() const;
 };

@@ -98,7 +98,7 @@ void AEnemyCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
 	Super::ChangeMesh(MeshToChange);
 }
 
-LineLeader AEnemyCharacter::GetLeaderType() const
-{
-	return Leader;
-}
+//LineLeader AEnemyCharacter::GetLeaderType() const
+//{
+//	return Super::GetLeaderType();
+//}

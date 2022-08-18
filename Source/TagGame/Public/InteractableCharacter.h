@@ -25,18 +25,8 @@ protected:
 	UPROPERTY()
 	USkeletalMeshComponent* SkeletalMesh = nullptr;
 
-	UPROPERTY()
-	UFollowComponent* FollowComponent = nullptr;
-
-	LineLeader Leader = LineLeader::None;
-
-	UPROPERTY(EditDefaultsOnly)
-		USkeletalMesh* PlayerSkeletalMesh = nullptr;
-
 	UPROPERTY(EditDefaultsOnly)
 		USkeletalMesh* EnemySkeletalMesh = nullptr;
-
-	virtual void ChangeMesh(USkeletalMesh* MeshToChange);
 
 public:	
 	// Called every frame
@@ -47,5 +37,13 @@ public:
 
 	virtual void HitPlayer(AActor* Player);
 
+	virtual void ChangeMesh(USkeletalMesh* MeshToChange);
 
+	UPROPERTY(EditDefaultsOnly)
+		USkeletalMesh* PlayerSkeletalMesh = nullptr;
+
+	UPROPERTY()
+		UFollowComponent* FollowComponent = nullptr;
+
+	LineLeader Leader = LineLeader::None;
 };

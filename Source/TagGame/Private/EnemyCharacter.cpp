@@ -18,6 +18,8 @@ void AEnemyCharacter::BeginPlay()
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OverlapBeginMesh);
 
 	AddGangMember(this);
+	UE_LOG(LogTemp, Warning, TEXT("%d"), PlayerSkeletalMesh->Materials.Num());
+	
 }
 
 void AEnemyCharacter::HitPlayer(AActor* Player)

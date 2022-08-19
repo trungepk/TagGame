@@ -17,7 +17,6 @@ void AInteractableCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	SkeletalMesh = FindComponentByClass<USkeletalMeshComponent>();
 	FollowComponent = FindComponentByClass<UFollowComponent>();
 }
 
@@ -41,11 +40,9 @@ void AInteractableCharacter::HitPlayer(AActor* Player)
 
 void AInteractableCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
 {
-	if (!SkeletalMesh) { return; }
-
 	if (MeshToChange)
 	{
-		SkeletalMesh->SetSkeletalMesh(MeshToChange);
+		GetMesh()->SetSkeletalMesh(MeshToChange);
 	}
 }
 

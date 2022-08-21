@@ -18,8 +18,6 @@ void AEnemyCharacter::BeginPlay()
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::OverlapBeginMesh);
 
 	AddGangMember(this);
-	UE_LOG(LogTemp, Warning, TEXT("%d"), PlayerSkeletalMesh->Materials.Num());
-	
 }
 
 void AEnemyCharacter::HitPlayer(AActor* Player)
@@ -31,26 +29,7 @@ void AEnemyCharacter::HitPlayer(AActor* Player)
 
 		if (GetMembersCount() <= MyMode->GetGangMember()->Num())
 		{
-			//Stop AI behaviour and destroy UI widget
-			OnCaptured.Broadcast();
-
-			for (auto* member : GMembers)
-			{
-				auto character = Cast<AInteractableCharacter>(member);
-				character->Leader = LineLeader::Player;
-
-				if (character && character->FollowComponent)
-				{
-					auto callback = [&]() {
-						MyMode->AddGangMember(character);
-						character->ChangeMesh(character->PlayerSkeletalMesh);
-					};
-
-					character->FollowComponent->Setup(Player, callback);
-				}
-			}
-
-			GMembers.Empty();
+			KilledByPlayer(MyMode, Player);
 		}
 		else
 		{
@@ -63,6 +42,31 @@ void AEnemyCharacter::HitPlayer(AActor* Player)
 			}
 		}
 	}
+}
+
+void AEnemyCharacter::KilledByPlayer(ATagGameGameMode* MyMode, AActor* Player)
+{
+	//Stop AI behaviour and destroy UI widget
+	OnCaptured.Broadcast();
+
+	for (auto* member : GMembers)
+	{
+		auto character = Cast<AInteractableCharacter>(member);
+		character->Leader = LineLeader::Player;
+
+		if (character && character->FollowComponent)
+		{
+			auto callback = [&]() {
+				MyMode->AddGangMember(character);
+				character->ChangeMesh(character->PlayerSkeletalMesh);
+			};
+
+			character->FollowComponent->Setup(Player, callback);
+		}
+	}
+
+	MyMode->UpdateEnemyCount();
+	GMembers.Empty();
 }
 
 void AEnemyCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

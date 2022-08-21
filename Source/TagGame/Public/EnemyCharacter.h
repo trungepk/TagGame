@@ -7,6 +7,8 @@
 #include "Constants.h"
 #include "EnemyCharacter.generated.h"
 
+class ATagGameGameMode;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyCharacterDelegate);
 /**
  * 
@@ -37,6 +39,8 @@ protected:
 
 private:
 	void HitPlayer(AActor* Player) override;
+
+	void KilledByPlayer(ATagGameGameMode* MyMode, AActor* Player);
 
 	UFUNCTION()
 		void OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

@@ -3,6 +3,8 @@
 #include "TagGameGameMode.h"
 #include "TagGamePlayerController.h"
 #include "TagGameCharacter.h"
+#include "EnemyCharacter.h"
+#include "Constants.h"
 #include "UObject/ConstructorHelpers.h"
 
 ATagGameGameMode::ATagGameGameMode()
@@ -33,4 +35,23 @@ void ATagGameGameMode::AddGangMember(AActor* gangMember)
 TArray<AActor*>* ATagGameGameMode::GetGangMember()
 {
 	return &GMembers;
+}
+
+void ATagGameGameMode::UpdateEnemyCount()
+{
+	//Count every enemies in level
+	TArray<AEnemyCharacter*> Out_Enemies;
+	UConstants::FindAllActors(GetWorld(), Out_Enemies);
+
+	//Determine if enemy which doesn't have line leader, if 0 then win game
+	for (auto* enemy : Out_Enemies)
+	{
+		if (enemy->GetLeaderType() == LineLeader::None)
+		{
+			return;
+		}
+	}
+
+	//Reach here means there're no enemy which has no leader
+	OnWin.Broadcast();
 }

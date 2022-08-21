@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "TagGameGameMode.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameModeDelegate);
+
 UCLASS(minimalapi)
 class ATagGameGameMode : public AGameModeBase
 {
@@ -24,6 +26,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		USkeletalMesh* EnemySkeletalMesh = nullptr;
 
+	UPROPERTY(BlueprintAssignable, Category = "Result")
+		FGameModeDelegate OnWin;
+
+	void UpdateEnemyCount();
 private:
 	UPROPERTY()
 		TArray<AActor*> GMembers;

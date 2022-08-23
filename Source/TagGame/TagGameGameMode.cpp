@@ -9,6 +9,9 @@
 
 ATagGameGameMode::ATagGameGameMode()
 {
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = true;
+	
 	// use our custom PlayerController class
 	PlayerControllerClass = ATagGamePlayerController::StaticClass();
 
@@ -24,6 +27,20 @@ ATagGameGameMode::ATagGameGameMode()
 	if(PlayerControllerBPClass.Class != NULL)
 	{
 		PlayerControllerClass = PlayerControllerBPClass.Class;
+	}
+}
+
+void ATagGameGameMode::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	bool CanSpawn = FPlatformTime::Seconds() - LastSpawnTime > SpawnRate;
+
+	if (CanSpawn)
+	{
+		LastSpawnTime = FPlatformTime::Seconds();
+
+		OnSpawnRequest.Broadcast();
 	}
 }
 

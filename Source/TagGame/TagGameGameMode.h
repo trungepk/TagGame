@@ -8,6 +8,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameModeDelegate);
 
+class ASpawner;
+
 UCLASS(minimalapi)
 class ATagGameGameMode : public AGameModeBase
 {
@@ -15,6 +17,8 @@ class ATagGameGameMode : public AGameModeBase
 
 public:
 	ATagGameGameMode();
+
+	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -36,15 +40,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	float SpawnRate = 3.0f;
 
-	UPROPERTY(BlueprintAssignable, Category = "Spawning")
-		FGameModeDelegate OnSpawnRequest;
 private:
 	UPROPERTY()
 		TArray<AActor*> GMembers;
 
-	UPROPERTY(EditAnywhere, Category = "Setup")
-		TSubclassOf<ACharacter> NeutralCharacterBlueprint;
-
 	double LastSpawnTime = 0;
+
+	UPROPERTY()
+		TArray<ASpawner*> Spawners;
 };
 

@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Spawner.generated.h"
+#include "PickableObject.generated.h"
 
 UCLASS()
-class TAGGAME_API ASpawner : public AActor
+class TAGGAME_API APickableObject : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASpawner();
+	APickableObject();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,9 +23,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SpawnCharacter();
-
-private:
-	UPROPERTY(EditAnywhere, Category = "Setup")
-		TSubclassOf<ACharacter> NeutralCharacterBlueprint;
+	virtual void PickedUp(AActor* Picker);
 };

@@ -13,6 +13,7 @@
 #include "Engine/World.h"
 #include "InteractableCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "PickableObject.h"
 
 ATagGameCharacter::ATagGameCharacter()
 {
@@ -52,7 +53,7 @@ void ATagGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ATagGameCharacter::HitMesh);
+	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ATagGameCharacter::HitMesh);
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATagGameCharacter::OverlapBeginMesh);
 	ATagGameGameMode* MyMode = Cast<ATagGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	MyMode->AddGangMember(this);
@@ -68,17 +69,21 @@ void ATagGameCharacter::Tick(float DeltaSeconds)
 void ATagGameCharacter::HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	AInteractableCharacter* InteractableCharacter = Cast<AInteractableCharacter>(OtherActor);
-	if (InteractableCharacter)
+	UE_LOG(LogTemp, Warning, TEXT("Hit"));
+	APickableObject* PickableObject = Cast<APickableObject>(OtherActor);
+
+	if (PickableObject)
 	{
-		InteractableCharacter->HitPlayer(HitComponent->GetOwner());
+		PickableObject->PickedUp(HitComponent->GetOwner());
 	}
 }
 
 void ATagGameCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Overlap"));
 	AInteractableCharacter* InteractableCharacter = Cast<AInteractableCharacter>(OtherActor);
+
 	if (InteractableCharacter)
 	{
 		InteractableCharacter->HitPlayer(OverlappedComponent->GetOwner());

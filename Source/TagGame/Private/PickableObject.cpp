@@ -1,33 +1,32 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Spawner.h"
-#include "GameFramework/Character.h"
+#include "PickableObject.h"
 
 // Sets default values
-ASpawner::ASpawner()
+APickableObject::APickableObject()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 }
 
 // Called when the game starts or when spawned
-void ASpawner::BeginPlay()
+void APickableObject::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ASpawner::Tick(float DeltaTime)
+void APickableObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ASpawner::SpawnCharacter()
+void APickableObject::PickedUp(AActor* Picker)
 {
-	GetWorld()->SpawnActor<ACharacter>(NeutralCharacterBlueprint, GetActorLocation(), GetActorRotation());
+	Destroy();
 }
 

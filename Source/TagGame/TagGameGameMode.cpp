@@ -5,6 +5,7 @@
 #include "TagGameCharacter.h"
 #include "EnemyCharacter.h"
 #include "Constants.h"
+#include "Spawner.h"
 #include "UObject/ConstructorHelpers.h"
 
 ATagGameGameMode::ATagGameGameMode()
@@ -30,6 +31,15 @@ ATagGameGameMode::ATagGameGameMode()
 	}
 }
 
+void ATagGameGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UConstants::FindAllActors(GetWorld(), Spawners);
+
+	UE_LOG(LogTemp, Warning, TEXT("%d"), Spawners.Num());
+}
+
 void ATagGameGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -40,7 +50,11 @@ void ATagGameGameMode::Tick(float DeltaTime)
 	{
 		LastSpawnTime = FPlatformTime::Seconds();
 
-		OnSpawnRequest.Broadcast();
+
+		for (auto* spawner : Spawners)
+		{
+			spawner->SpawnCharacter();
+		}
 	}
 }
 

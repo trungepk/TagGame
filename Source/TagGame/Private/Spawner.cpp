@@ -2,12 +2,13 @@
 
 
 #include "Spawner.h"
+#include "GameFramework/Character.h"
 
 // Sets default values
 ASpawner::ASpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -23,5 +24,10 @@ void ASpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASpawner::SpawnCharacter()
+{
+	GetWorld()->SpawnActor<ACharacter>(NeutralCharacterBlueprint, GetActorLocation(), GetActorRotation());
 }
 

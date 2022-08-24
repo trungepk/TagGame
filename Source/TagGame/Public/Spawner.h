@@ -23,4 +23,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SpawnCharacter();
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		TSubclassOf<ACharacter> NeutralCharacterBlueprint;
 };

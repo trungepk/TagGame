@@ -2,25 +2,14 @@
 
 
 #include "SpeedUpObject.h"
-#include "GameFramework/Character.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "TagGame/TagGameCharacter.h"
 
 void ASpeedUpObject::PickedUp(AActor* Picker)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PickedUp"));
-	ACharacter* Character = Cast<ACharacter>(Picker);
+	ATagGameCharacter* Character = Cast<ATagGameCharacter>(Picker);
 	if (Character)
 	{
-		Character->GetCharacterMovement()->MaxWalkSpeed += AddedSpeed;
-
-		/*bool TimeUp = FPlatformTime::Seconds() - LastPickedTime > Duration;
-
-		if (TimeUp)
-		{
-			LastPickedTime = FPlatformTime::Seconds();
-
-
-		}*/
+		Character->AddSpeed(AddedSpeed, Duration);
 	}
 
 	Super::PickedUp(Picker);

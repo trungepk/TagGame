@@ -69,7 +69,6 @@ void ATagGameCharacter::Tick(float DeltaSeconds)
 void ATagGameCharacter::HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit"));
 	APickableObject* PickableObject = Cast<APickableObject>(OtherActor);
 
 	if (PickableObject)
@@ -81,7 +80,6 @@ void ATagGameCharacter::HitMesh(UPrimitiveComponent* HitComponent, AActor* Other
 void ATagGameCharacter::OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlap"));
 	AInteractableCharacter* InteractableCharacter = Cast<AInteractableCharacter>(OtherActor);
 
 	if (InteractableCharacter)
@@ -99,4 +97,18 @@ int32 ATagGameCharacter::GetMembersCount() const
 void ATagGameCharacter::KillPlayer()
 {
 	OnDead.Broadcast();
+}
+
+void ATagGameCharacter::AddSpeed(float AddedSpeed, float Duration)
+{
+	GetCharacterMovement()->MaxWalkSpeed += AddedSpeed;
+
+	FTimerHandle handle;
+	FTimerDelegate ResetDelegate = FTimerDelegate::CreateUObject(this, &ATagGameCharacter::ResetSpeed, AddedSpeed);
+	GetWorldTimerManager().SetTimer(handle, ResetDelegate, Duration, false);
+}
+
+void ATagGameCharacter::ResetSpeed(float Speed)
+{
+	GetCharacterMovement()->MaxWalkSpeed -= Speed;
 }

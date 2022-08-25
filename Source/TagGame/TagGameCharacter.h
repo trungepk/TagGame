@@ -35,6 +35,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FPlayerDelegate OnDead;
 
+	UFUNCTION()
+		void AddSpeed(float AddedSpeed, float Duration);
+
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -50,5 +53,8 @@ private:
 	UFUNCTION()
 		void OverlapBeginMesh(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		void ResetSpeed(float Speed);
 };
 

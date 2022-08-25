@@ -22,7 +22,7 @@ public:
 	float Duration = 5.f;
 	
 private:
+	UFUNCTION()
 	void PickedUp(AActor* Picker) override;
-
-	float LastPickedTime = 0.f;
+	
 };

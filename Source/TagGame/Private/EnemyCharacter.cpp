@@ -59,6 +59,7 @@ void AEnemyCharacter::KilledByPlayer(ATagGameGameMode* MyMode, AActor* Player)
 			auto callback = [&]() {
 				MyMode->AddGangMember(character);
 				character->ChangeMesh(character->PlayerSkeletalMesh);
+				character->ChangeAnim(character->PlayerAnimBlueprint);
 			};
 
 			character->FollowComponent->Setup(Player, callback);

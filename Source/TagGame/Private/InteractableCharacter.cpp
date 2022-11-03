@@ -46,6 +46,14 @@ void AInteractableCharacter::ChangeMesh(USkeletalMesh* MeshToChange)
 	}
 }
 
+void AInteractableCharacter::ChangeAnim(UAnimBlueprint* AnimToChange)
+{
+	if (AnimToChange)
+	{
+		GetMesh()->SetAnimInstanceClass(AnimToChange->GetAnimBlueprintGeneratedClass());
+	}
+}
+
 LineLeader AInteractableCharacter::GetLeaderType() const
 {
 	return Leader;

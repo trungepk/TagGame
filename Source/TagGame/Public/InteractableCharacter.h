@@ -36,8 +36,19 @@ public:
 
 	virtual void ChangeMesh(USkeletalMesh* MeshToChange);
 
+	virtual void ChangeAnim(UAnimBlueprint* AnimToChange);
+
 	UPROPERTY(EditDefaultsOnly)
 		USkeletalMesh* PlayerSkeletalMesh = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+		UAnimBlueprint* PlayerAnimBlueprint = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+		UAnimBlueprint* NeutralAnimBlueprint = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+		UAnimBlueprint* EnemyAnimBlueprint = nullptr;
 
 	UPROPERTY()
 		UFollowComponent* FollowComponent = nullptr;

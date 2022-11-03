@@ -30,6 +30,7 @@ void ANeutralCharacter::Tick(float DeltaTime)
 void ANeutralCharacter::HitPlayer(AActor* Player)
 {
 	ChangeMesh(PlayerSkeletalMesh);
+	ChangeAnim(PlayerAnimBlueprint);
 
 	bool bSwitchTeam = false;
 
@@ -73,6 +74,8 @@ void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 	HitEnemyCharacter = Enemy;
 
 	ChangeMesh(EnemySkeletalMesh);
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	ChangeAnim(EnemyAnimBlueprint);
 
 	bool bSwitchTeam = false;
 

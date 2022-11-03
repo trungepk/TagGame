@@ -74,7 +74,7 @@ void ANeutralCharacter::HitEnemy(AEnemyCharacter* Enemy)
 	HitEnemyCharacter = Enemy;
 
 	ChangeMesh(EnemySkeletalMesh);
-	GetMesh()->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	//GetMesh()->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 	ChangeAnim(EnemyAnimBlueprint);
 
 	bool bSwitchTeam = false;
